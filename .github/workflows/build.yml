@@ -34,11 +34,25 @@ jobs:
         # Run buildozer and save full stdout/stderr to a log file for debugging
         buildozer -v android debug 2>&1 | tee buildozer_build.log
 
-    - name: Upload APK
+    - name: List generated APKs and build folders (diagnostic)
+      run: |
+        echo "=== Searching for APK/AAB files ==="
+        find . -type f -name "*.apk" -print || true
+        find . -type f -name "*.aab" -print || true
+        echo "=== .buildozer directory listing ==="
+        ls -la .buildozer || true
+        echo "=== bin directory listing ==="
+        ls -la bin || true
+
+    - name: Upload APK / AAB artifacts
       uses: actions/upload-artifact@v4
       with:
         name: tank-calculator-apk
-        path: bin/*.apk
+        path: |
+          **/*.apk
+          **/*.aab
+          bin/*.apk
+          bin/*.aab
 
     - name: Upload build log
       uses: actions/upload-artifact@v4
